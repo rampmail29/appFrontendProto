@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import FormScreen from "../screens/FormScreen";
 import GetDataScreen from "../screens/GetDataScreen";
+import TrabajadoresScreen from "../screens/TrabajadoresScreen";
 
 // Crea el Stack Navigator
 const Stack = createStackNavigator();
@@ -30,6 +31,8 @@ const AppNavigator: React.FC = () => {
         component={GetDataScreen}
         options={{ title: "GetData" }}
       />
+
+      <Stack.Screen name="Trabajadores" component={TrabajadoresScreen} />
       {/* AEsto es para agregar más pantallas --> usando más <Stack.Screen /> */}
     </Stack.Navigator>
   );

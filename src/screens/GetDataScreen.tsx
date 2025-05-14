@@ -1,80 +1,87 @@
-/* import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
+import { apiGet } from '../services/api';
 
-export const GetDataScreen: React.FC = () => {
-  const [nombre, setNombre] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [cargo, setCargo] = useState('');
-  const [direccion, setDireccion] = useState('');
-  const [documento, setDocumento] = useState('');
+const GetDataScreen: React.FC = () => {
+  const [numeroDocumento, setNumeroDocumento] = useState('');
+  const [resultado, setResultado] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [busquedaRealizada, setBusquedaRealizada] = useState(false); // 🆕
 
-  const handleSubmit = () => {
-    // Validación básica
-    if (!nombre || !correo || !cargo || !direccion || !documento) {
-      Alert.alert('Todos los campos son obligatorios');
+  const buscarTrabajador = async () => {
+    if (!numeroDocumento.trim()) {
+      Alert.alert('Debes ingresar un número de documento');
       return;
     }
 
-    // Por ahora, solo mostramos los datos
-    Alert.alert('Datos del trabajador', `Nombre: ${nombre}\nCorreo: ${correo}\nCargo: ${cargo}\nDirección: ${direccion}\nDocumento: ${documento}`);
+    setLoading(true);
+    setBusquedaRealizada(false);
 
-    // Más adelante puedes llamar a tu función del servicio API aquí
-    // await postTrabajador({ nombre, correo, cargo });
+    try {
+      const data = await apiGet('/consultar', { numeroDocumento });
+
+      if (data) {
+        setResultado(data);
+      } else {
+        setResultado(null);
+      }
+    } catch (error) {
+      setResultado(null); // Limpiar en caso de error
+      //Alert.alert('Error consultando el servidor');
+      //console.error(error);
+    } finally {
+      setLoading(false);
+      setBusquedaRealizada(true); // ✅ Marcar que ya se consultó
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Formulario de Trabajador</Text>
+      <Text style={styles.title}>Consulta de Trabajador</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Nombre"
-        value={nombre}
-        onChangeText={setNombre}
+        placeholder="Número de documento"
+        keyboardType="numeric"
+        value={numeroDocumento}
+        onChangeText={setNumeroDocumento}
       />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Correo"
-        keyboardType="email-address"
-        value={correo}
-        onChangeText={setCorreo}
-      />
+      <Button title="Buscar" onPress={buscarTrabajador} />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Cargo"
-        value={cargo}
-        onChangeText={setCargo}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Dirección"
-        value={direccion}
-        onChangeText={setDireccion}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Documento"
-        value={documento}
-        onChangeText={setDocumento}
-      />
+      {loading && <ActivityIndicator size="large" color="#007bff" style={{ marginTop: 20 }} />}
 
-      <Button title="Enviar" onPress={handleSubmit} />
+      {!loading && resultado && (
+        <View style={styles.resultado}>
+          <Text style={styles.resultadoTitulo}>Resultado:</Text>
+          <Text>Nombre: {resultado.nombre}</Text>
+          <Text>
+            Fecha de expedición documento: {resultado.fechaExpedicionDocumento}
+          </Text>
+          <Text>Correo: {resultado.email}</Text>
+          <Text>Fecha de registro: {resultado.fechaRegistro}</Text>
+          <Text>Dependencia: {resultado.dependencia}</Text>
+        </View>
+      )}
+
+      {!loading && busquedaRealizada && !resultado && (
+        <Text style={styles.sinResultados}>No se encontraron resultados para el documento ingresado.</Text>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    marginTop: 50,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
+  container: { padding: 20, marginTop: 50 },
+  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 20 },
   input: {
     borderColor: '#aaa',
     borderWidth: 1,
@@ -82,51 +89,21 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 5,
   },
-});
-    
-export default GetDataScreen; */
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { apiGet } from '../services/api';
-
-const GetDataScreen: React.FC = () => {
-  const [trabajadores, setTrabajadores] = useState<any[]>([]);
-
-  useEffect(() => {
-    const cargarDatos = async () => {
-      try {
-        const data = await apiGet('/trabajadores');
-        setTrabajadores(data);
-      } catch (error) {
-        console.error('Error al cargar trabajadores:', error);
-      }
-    };
-
-    cargarDatos();
-  }, []);
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Trabajadores</Text>
-      <FlatList
-        data={trabajadores}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text>Nombre: {item.nombre}</Text>
-            <Text>Correo: {item.correo}</Text>
-            <Text>Cargo: {item.cargo}</Text>
-          </View>
-        )}
-      />
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
-  item: { borderBottomWidth: 1, borderColor: '#ccc', paddingVertical: 10 },
+  resultado: {
+    marginTop: 30,
+    padding: 15,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 6,
+  },
+  resultadoTitulo: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  sinResultados: {
+    marginTop: 30,
+    fontStyle: 'italic',
+    color: '#888',
+  },
 });
 
 export default GetDataScreen;

@@ -1,18 +1,19 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useAuth } from 'Context/AuthContext';
+import React from "react";
+import { View, Text, StyleSheet, Button } from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useAuth } from "Context/AuthContext";
 
 // defino el tipo para la navegación
 type RootStackParamList = {
   Home: undefined;
-  Form: undefined; 
+  Form: undefined;
   GetData: undefined;
+  Trabajadores: undefined;
 
   // ac´a puedo agregar otras rutas como Profile: undefined, etc.
 };
 
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -34,39 +35,56 @@ type Props = {
 }; */
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
-    const { user, signIn, signOut } = useAuth();
-  
-    return (
-      <View>
-        {user ? (
-          <>
-            <Text>Bienvenido a Programación de Dispositivos Móviles {user}</Text>
-            <Text>Semana 1 de tercer corte</Text>
-            <Text>Semana 3 de tercer corte - explicación del proyecto</Text>
-            <Button title="Cerrar sesión" onPress={signOut} />
-            <Button title="Ir al Formulario" onPress={() => navigation.navigate('Form')} />
-            <Button title="Ir al GetData" onPress={() => navigation.navigate('GetData')} />
-          </>
-        ) : (
-          <>
-            <Text>No has iniciado sesión</Text>
-            <Button title="Iniciar sesión" onPress={() => signIn('UsuarioDemo')} />
-          </>
-        )}
-      </View>
-    );
-  };
+  const { user, signIn, signOut } = useAuth();
+
+  return (
+    <View>
+      {user ? (
+        <>
+          <Text>Bienvenido a Programación de Dispositivos Móviles {user}</Text>
+          <Text>Semana 1 de tercer corte</Text>
+          <Text>Semana 3 de tercer corte - explicación del proyecto</Text>
+          <View style={{ marginVertical: 10 }} />
+          <Button title="Cerrar sesión" onPress={signOut} />
+          <View style={{ marginVertical: 10 }} />
+          <Button
+            title="Ir al Formulario"
+            onPress={() => navigation.navigate("Form")}
+          />
+          <View style={{ marginVertical: 10 }} />
+          <Button
+            title="Ir al GetData"
+            onPress={() => navigation.navigate("GetData")}
+          />
+          <View style={{ marginVertical: 10 }} />
+          <Button
+            title="Ver Trabajadores"
+            onPress={() => navigation.navigate("Trabajadores")}
+          />
+        </>
+      ) : (
+        <>
+          <Text>No has iniciado sesión</Text>
+          <Button
+            title="Iniciar sesión"
+            onPress={() => signIn("UsuarioDemo")}
+          />
+        </>
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
 });

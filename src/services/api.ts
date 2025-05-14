@@ -1,14 +1,28 @@
-const BASE_URL = 'http://192.168.40.20:3000/api'; // IP local de mi backend srv
+//conexión red WiFi:IoT
+const BASE_URL = "http://192.168.40.20:4561/api"; // IP local de mi backend srv en iot
 
 const headers = {
-  'Content-Type': 'application/json',
+  "Content-Type": "application/json",
+};
+// Función para construir query string desde un objeto
+const buildQueryString = (params?: Record<string, string | number>) => {
+  if (!params) return "";
+  const query = new URLSearchParams(
+    params as Record<string, string>
+  ).toString();
+  return `?${query}`;
 };
 
-// Función GET genérica
-export const apiGet = async (endpoint: string) => {
+// Función GET genérica con soporte de query params
+export const apiGet = async (
+  endpoint: string,
+  queryParams?: Record<string, string | number>
+) => {
   try {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'GET',
+    const url = `${BASE_URL}${endpoint}${buildQueryString(queryParams)}`;
+
+    const response = await fetch(url, {
+      method: "GET",
       headers,
     });
 
@@ -18,16 +32,17 @@ export const apiGet = async (endpoint: string) => {
 
     return await response.json();
   } catch (error) {
-    console.error(`Error en apiGet(${endpoint}):`, error);
+    //console.error(`Error en apiGet(${endpoint}):`, error);
     throw error;
   }
 };
 
 // Función POST genérica
 export const apiPost = async (endpoint: string, body: any) => {
+  console.log(body)
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: JSON.stringify(body),
     });
@@ -42,12 +57,11 @@ export const apiPost = async (endpoint: string, body: any) => {
     throw error;
   }
 };
-
-// función put generica 
+// función put generica
 export const apiPut = async (endpoint: string, body: any) => {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'PUT',
+      method: "PUT",
       headers,
       body: JSON.stringify(body),
     });
@@ -62,12 +76,15 @@ export const apiPut = async (endpoint: string, body: any) => {
     throw error;
   }
 };
-// función delete generica  
+// función delete generica
 export const apiDelete = async (endpoint: string) => {
+  console.log(endpoint)
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: 'DELETE',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     if (!response.ok) {
@@ -80,11 +97,12 @@ export const apiDelete = async (endpoint: string) => {
     throw error;
   }
 };
-// función patch generica       
+
+// función patch generica
 export const apiPatch = async (endpoint: string, body: any) => {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers,
       body: JSON.stringify(body),
     });
@@ -103,7 +121,7 @@ export const apiPatch = async (endpoint: string, body: any) => {
 export const apiHead = async (endpoint: string) => {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'HEAD',
+      method: "HEAD",
       headers,
     });
 
@@ -121,7 +139,7 @@ export const apiHead = async (endpoint: string) => {
 export const apiOptions = async (endpoint: string) => {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'OPTIONS',
+      method: "OPTIONS",
       headers,
     });
 
@@ -139,7 +157,7 @@ export const apiOptions = async (endpoint: string) => {
 export const apiConnect = async (endpoint: string) => {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'CONNECT',
+      method: "CONNECT",
       headers,
     });
 
@@ -157,7 +175,7 @@ export const apiConnect = async (endpoint: string) => {
 export const apiTrace = async (endpoint: string) => {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'TRACE',
+      method: "TRACE",
       headers,
     });
 
