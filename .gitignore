@@ -2,3 +2,4 @@
 /.env
 /.expo
 .package-lock.json
+.fix_eas_directories.bat
