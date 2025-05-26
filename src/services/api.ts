@@ -1,6 +1,6 @@
 //conexión red WiFi:IoT
-//const BASE_URL = "http://192.168.40.20:4561/api"; // IP local de mi backend srv en iot
-const BASE_URL = "appbackend-production-96c6.up.railway.app/api"; // URL de mi backend en Railway
+//const BASE_URL = "http://192.168.10.20:4561/api"; // IP local de mi backend srv en iot
+const BASE_URL = "https://appbackend-production-96c6.up.railway.app/api"; // URL de mi backend en Railway
 
 const headers = {
   "Content-Type": "application/json",
