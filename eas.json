@@ -1,8 +1,8 @@
 {
   "build": {
     "develompent": {
-      "develompentClient":true,
-      "dristribution": "internal"
+      "developmentClient":true,
+      "distribution": "internal"
     },
     "preview": {
       "android": {
