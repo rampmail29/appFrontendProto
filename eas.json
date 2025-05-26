@@ -1,9 +1,14 @@
 {
   "build": {
-    "production": {
+    "develompent": {
+      "develompentClient":true,
+      "dristribution": "internal"
+    },
+    "preview": {
       "android": {
         "buildType": "apk"
       }
-    }
+    },
+    "production":{}
   }
 }
