@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useAuth } from "Context/AuthContext";
+import { useAuth } from "context/AuthContext";
 
 // defino el tipo para la navegación
 type RootStackParamList = {

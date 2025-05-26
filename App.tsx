@@ -1,6 +1,6 @@
 import React from 'react';
 import AppNavigator from './src/navigation/AppNavigator';
-import { AuthProvider } from './src/Context/AuthContext';
+import { AuthProvider } from './src/context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
